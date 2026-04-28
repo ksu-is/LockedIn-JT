@@ -56,3 +56,32 @@ def add_assignment(assignments):
     print(f"\n✓ Added: '{name}' for {class_name}, due {due_date_str}.")
 
 
+def view_assignments(assignments):
+    """Display all current assignments sorted by due date."""
+    print("\n--- Your Assignments ---")
+    if not assignments:
+        print("No assignments yet. Add one to get started!")
+        return
+ 
+    sorted_assignments = sorted(assignments, key=lambda x: x["due_date"])
+    today = date.today()
+ 
+    for i, a in enumerate(sorted_assignments, start=1):
+        due = datetime.strptime(a["due_date"], "%Y-%m-%d").date()
+        days_left = (due - today).days
+ 
+        if days_left < 0:
+            status = "  [OVERDUE]"
+        elif days_left == 0:
+            status = "  [DUE TODAY]"
+        elif days_left == 1:
+            status = "  [DUE TOMORROW]"
+        elif days_left <= 3:
+            status = f"  [Due in {days_left} days]"
+        else:
+            status = f"  ({days_left} days left)"
+ 
+        print(f"\n  {i}. {a['name']}")
+        print(f"     Class : {a['class']}")
+        print(f"     Due   : {a['due_date']}{status}")
+ 
