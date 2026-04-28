@@ -85,3 +85,52 @@ def view_assignments(assignments):
         print(f"     Class : {a['class']}")
         print(f"     Due   : {a['due_date']}{status}")
  
+
+def delete_assignment(assignments):
+    """Let the user remove a completed or unwanted assignment."""
+    view_assignments(assignments)
+    if not assignments:
+        return
+ 
+    print("\n--- Delete Assignment ---")
+    try:
+        choice = int(input("Enter the number of the assignment to delete (0 to cancel): "))
+    except ValueError:
+        print("Please enter a valid number.")
+        return
+ 
+    sorted_assignments = sorted(assignments, key=lambda x: x["due_date"])
+ 
+    if choice == 0:
+        print("Cancelled.")
+        return
+    elif 1 <= choice <= len(sorted_assignments):
+        removed = sorted_assignments[choice - 1]
+        assignments.remove(removed)
+        save_assignments(assignments)
+        print(f"\n✓ Deleted: '{removed['name']}' ({removed['class']})")
+    else:
+        print("Invalid selection.")
+ 
+ 
+def show_reminders(assignments):
+    """Show urgent reminders for assignments due today or within 3 days."""
+    today = date.today()
+    urgent = []
+    overdue = []
+ 
+    for a in assignments:
+        due = datetime.strptime(a["due_date"], "%Y-%m-%d").date()
+        days_left = (due - today).days
+        if days_left < 0:
+            overdue.append((a, days_left))
+        elif days_left <= 3:
+            urgent.append((a, days_left))
+ 
+    if not urgent and not overdue:
+        return  # No reminders needed, stay quiet
+ 
+    print("\n" + "=" * 40)
+    print("  REMINDERS")
+    print("=" * 40)
+ 
