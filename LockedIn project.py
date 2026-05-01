@@ -134,3 +134,54 @@ def show_reminders(assignments):
     print("  REMINDERS")
     print("=" * 40)
  
+
+    for a, days in overdue:
+        print(f"  OVERDUE ({abs(days)}d ago): {a['name']} — {a['class']}")
+ 
+    for a, days in urgent:
+        if days == 0:
+            print(f"  DUE TODAY: {a['name']} — {a['class']}")
+        elif days == 1:
+            print(f"  DUE TOMORROW: {a['name']} — {a['class']}")
+        else:
+            print(f"  Due in {days} days: {a['name']} — {a['class']}")
+ 
+    print("=" * 40)
+ 
+ 
+def print_menu():
+    """Print the main menu options."""
+    print("\n=============================")
+    print("       L O C K E D I N       ")
+    print("   Your Study Planner App    ")
+    print("=============================")
+    print("  1. View Assignments")
+    print("  2. Add Assignment")
+    print("  3. Delete Assignment")
+    print("  4. Exit")
+    print("=============================")
+ 
+ 
+def main():
+    """Main loop for the LockedIn application."""
+    print("\nWelcome to LockedIn!")
+    assignments = load_assignments()
+ 
+    # Show reminders automatically on startup
+    show_reminders(assignments)
+ 
+    while True:
+        print_menu()
+        choice = input("Choose an option (1-4): ").strip()
+ 
+        if choice == "1":
+            view_assignments(assignments)
+        elif choice == "2":
+            add_assignment(assignments)
+        elif choice == "3":
+            delete_assignment(assignments)
+        elif choice == "4":
+            print("\nGoodbye! Stay locked in. 📚\n")
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
